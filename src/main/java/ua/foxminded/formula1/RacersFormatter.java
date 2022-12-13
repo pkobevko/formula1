@@ -42,13 +42,13 @@ public class RacersFormatter {
 
                 String durationOfBestLap = durationAsString(racer.getBestLapDuration());
 
-                String string = String.format("%s%d. %s%s|%s%s|%s" + LINE_SEPARATOR,
+                String currentString = String.format("%s%d. %s%s|%s%s|%s",
                     spacesBeforeIndex, racerNumber, racer.getName(), spacesAfterName, racer.getTeam(), spacesAfterTeam, durationOfBestLap);
 
-                stringBuilder.append(string);
+                stringBuilder.append(currentString + LINE_SEPARATOR);
 
                 if (racerNumber == NUMBER_CARS_IN_Q2) {
-                    stringBuilder.append(hyphens(string.length() - LINE_SEPARATOR.length()) + LINE_SEPARATOR);
+                    stringBuilder.append(hyphens(currentString.length()) + LINE_SEPARATOR);
                 }
             });
 
