@@ -9,12 +9,16 @@ import java.util.stream.Collectors;
 
 public class RacersFormatter {
 
+    private static final String LINE_SEPARATOR = "\n";
+    private static final int ZERO_COMPENSATION = 1;
+    private static final int NUMBER_CARS_IN_Q2 = 15;
+
     public String format(List<Racer> racers) {
         List<Racer> sortedRacers = racers.stream()
             .sorted(Comparator.comparing(Racer::getBestLapDuration))
             .collect(Collectors.toList());
 
-        int numberOfLastRacer = sortedRacers.indexOf(sortedRacers.get(racers.size() - 1)) + 1;
+        int numberOfLastRacer = sortedRacers.indexOf(sortedRacers.get(racers.size() - ZERO_COMPENSATION)) + ZERO_COMPENSATION;
         int lengthOfLongestName = sortedRacers.stream()
             .map(racer -> racer.getName().length())
             .sorted(Comparator.reverseOrder())
@@ -31,25 +35,25 @@ public class RacersFormatter {
 
         sortedRacers.stream()
             .forEach(racer -> {
-                int racerNumber = sortedRacers.indexOf(racer) + 1;
+                int racerNumber = sortedRacers.indexOf(racer) + ZERO_COMPENSATION;
                 String spacesBeforeIndex = spaces(numOfDigits(numberOfLastRacer) - numOfDigits(racerNumber));
                 String spacesAfterName = spaces(lengthOfLongestName - racer.getName().length());
                 String spacesAfterTeam = spaces(lengthOfLongestTeam - racer.getTeam().length());
 
                 String durationOfBestLap = durationAsString(racer.getBestLapDuration());
 
-                String string = String.format("%s%d. %s%s|%s%s|%s\n",
+                String string = String.format("%s%d. %s%s|%s%s|%s" + LINE_SEPARATOR,
                     spacesBeforeIndex, racerNumber, racer.getName(), spacesAfterName, racer.getTeam(), spacesAfterTeam, durationOfBestLap);
 
                 stringBuilder.append(string);
 
-                if (racerNumber == 15) {
-                    stringBuilder.append(hyphens(string.length()) + "\n");
+                if (racerNumber == NUMBER_CARS_IN_Q2) {
+                    stringBuilder.append(hyphens(string.length() - LINE_SEPARATOR.length()) + LINE_SEPARATOR);
                 }
             });
 
         if (stringBuilder.length() > 0) {
-            int lastIndexOfString = stringBuilder.length() - 1;
+            int lastIndexOfString = stringBuilder.length() - ZERO_COMPENSATION;
             stringBuilder.deleteCharAt(lastIndexOfString);
         }
 
