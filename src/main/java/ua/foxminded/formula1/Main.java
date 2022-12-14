@@ -1,5 +1,9 @@
 package ua.foxminded.formula1;
 
+import ua.foxminded.formula1.racer.Racer;
+import ua.foxminded.formula1.services.RacersFormatter;
+import ua.foxminded.formula1.services.RacersResult;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -7,12 +11,12 @@ import java.util.List;
 public class Main {
     public static void main(String[] args) {
         try {
-            File abbreviationsFile = new File("src/main/resources/abbreviations.txt");
-            File startLogFile = new File("src/main/resources/start.log");
-            File endLogFile = new File("src/main/resources/end.log");
+            File abbreviations = new File("src/main/resources/abbreviations.txt");
+            File startLog = new File("src/main/resources/start.log");
+            File endLog = new File("src/main/resources/end.log");
 
-            RacersRepository racersRepository = new RacersRepository(abbreviationsFile, startLogFile, endLogFile);
-            List<Racer> racers = racersRepository.getRacers();
+            RacersResult racersResult = new RacersResult();
+            List<Racer> racers = racersResult.createListOfRacers(abbreviations, startLog, endLog);
             RacersFormatter formatter = new RacersFormatter();
             System.out.println(formatter.format(racers));
         } catch (IOException e) {
