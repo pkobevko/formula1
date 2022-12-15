@@ -21,28 +21,38 @@ public class RacersFormatter {
 
 
     public String format(List<Racer> racers) {
+        validate(racers);
+
         List<Racer> sortedRacers = racers.stream()
             .sorted(Comparator.comparing(Racer::getBestLap))
             .collect(Collectors.toList());
 
         StringBuilder stringBuilder = new StringBuilder();
 
-        createTable(stringBuilder, sortedRacers);
-        deleteLastCharInStringBuilder(stringBuilder);
 
-        return stringBuilder.toString();
-    }
-
-    private void createTable(StringBuilder stringBuilder, List<Racer> racers) {
-        for (int i = 0; i < racers.size(); i++) {
+        for (int i = 0; i < sortedRacers.size(); i++) {
             int racerNumber = i + ZERO_COMPENSATION;
-            String currentLine = createRacerLine(racerNumber, racers.get(i), racers);
+            String currentLine = createRacerLine(racerNumber, sortedRacers.get(i), sortedRacers);
 
             if (i == NUMBER_CARS_IN_Q2) {
                 stringBuilder.append(getHyphensLine(currentLine));
             }
 
             stringBuilder.append(currentLine);
+        }
+
+        deleteLastCharInStringBuilder(stringBuilder);
+
+        return stringBuilder.toString();
+    }
+
+    private void validate(List<Racer> racers) {
+        if (racers == null) {
+            throw new IllegalArgumentException("You cannot pass null to this function");
+        }
+
+        if (racers.isEmpty()) {
+            throw new IllegalArgumentException("List cannot be empty");
         }
     }
 
