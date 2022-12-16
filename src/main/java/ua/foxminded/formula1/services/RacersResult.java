@@ -4,7 +4,7 @@ import ua.foxminded.formula1.racer.Racer;
 
 import java.io.File;
 import java.time.Duration;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -17,11 +17,10 @@ public class RacersResult {
         Map<String, Duration> lapTimes = fileParser.parseLogFiles(startLog, endLog);
 
         if (racers.isEmpty() || lapTimes.isEmpty()) {
-            return new ArrayList<>();
+            return Collections.emptyList();
         }
 
         addLapTimesToRacers(racers, lapTimes);
-
         return racers;
     }
 
