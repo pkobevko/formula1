@@ -8,11 +8,12 @@ import java.nio.file.Files;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class FileParser {
 
@@ -25,12 +26,12 @@ public class FileParser {
 
         List<Racer> racers;
 
-        try {
-            racers = Files.lines(file.toPath()).map(line -> line.split(SEPARATOR))
+        try (Stream<String> lines = Files.lines(file.toPath())) {
+            racers = lines.map(line -> line.split(SEPARATOR))
                 .map(s -> new Racer(s[0], s[1], s[2]))
                 .collect(Collectors.toList());
         } catch (IOException e) {
-            racers = new ArrayList<>();
+            racers = Collections.emptyList();
         }
         return racers;
     }
@@ -41,7 +42,7 @@ public class FileParser {
         Map<String, LocalDateTime> end = parseLogFile(endLog);
 
         if (start.isEmpty() || end.isEmpty()) {
-            return new HashMap<>();
+            return Collections.emptyMap();
         }
 
         Map<String, Duration> result = new HashMap<>();
@@ -55,12 +56,12 @@ public class FileParser {
 
         Map<String, LocalDateTime> logTimes;
 
-        try {
-            logTimes = Files.lines(log.toPath())
-                .collect(Collectors.toMap(key -> key.substring(0, ABBREVIATION_LENGTH),
-                    value -> LocalDateTime.parse(value.substring(ABBREVIATION_LENGTH), FORMATTER)));
+        try (Stream<String> lines = Files.lines(log.toPath())) {
+            logTimes = lines.collect(Collectors.toMap(
+                key -> key.substring(0, ABBREVIATION_LENGTH),
+                value -> LocalDateTime.parse(value.substring(ABBREVIATION_LENGTH), FORMATTER)));
         } catch (IOException e) {
-            logTimes = new HashMap<>();
+            logTimes = Collections.emptyMap();
         }
         return logTimes;
     }

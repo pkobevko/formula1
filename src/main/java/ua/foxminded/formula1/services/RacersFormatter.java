@@ -18,6 +18,8 @@ public class RacersFormatter {
     private static final char SPACE = ' ';
     private static final char VERTICAL_BAR = '|';
     private static final String TIME_PATTERN = "mm:ss:SSS";
+    private static final int SHORTEST_NAME_LENGTH = 0;
+    private static final int SHORTEST_TEAM_LENGTH = 0;
 
 
     public String format(List<Racer> racers) {
@@ -28,7 +30,6 @@ public class RacersFormatter {
             .collect(Collectors.toList());
 
         StringBuilder stringBuilder = new StringBuilder();
-
 
         for (int i = 0; i < sortedRacers.size(); i++) {
             int racerNumber = i + ZERO_COMPENSATION;
@@ -82,7 +83,7 @@ public class RacersFormatter {
             .map(racer -> racer.getTeam().length())
             .sorted(Comparator.reverseOrder())
             .findFirst()
-            .orElse(0);
+            .orElse(SHORTEST_TEAM_LENGTH);
     }
 
     private String getNamePart(Racer racer, List<Racer> racers) {
@@ -95,7 +96,7 @@ public class RacersFormatter {
             .map(racer -> racer.getName().length())
             .sorted(Comparator.reverseOrder())
             .findFirst()
-            .orElse(0);
+            .orElse(SHORTEST_NAME_LENGTH);
     }
 
     private String getCountPart(int racerNumber, List<Racer> racers) {
